@@ -6,21 +6,42 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x4a0e28); // Definir a cor de fundo
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true }); // Ativar antialiasing
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio); // Aumentar a resolução
 document.body.appendChild(renderer.domElement);
 
-// Adicionar luz
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 5, 5).normalize();
-scene.add(directionalLight);
+// Adicionar luz hemisférica
+const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1); // Luz hemisférica para iluminação uniforme
+hemisphereLight.position.set(0, 200, 0);
+scene.add(hemisphereLight);
+
+// Adicionar luzes direcionais
+const directionalLight1 = new THREE.DirectionalLight(0xffffff, 2);
+directionalLight1.position.set(1, 1, 1).normalize();
+scene.add(directionalLight1);
+
+const directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
+directionalLight2.position.set(-1, 1, -1).normalize();
+scene.add(directionalLight2);
+
+const directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
+directionalLight3.position.set(1, -1, 1).normalize();
+scene.add(directionalLight3);
+
+const directionalLight4 = new THREE.DirectionalLight(0xffffff, 2);
+directionalLight4.position.set(-1, -1, -1).normalize();
+scene.add(directionalLight4);
 
 let mixers = []; // Declarar os mixers de animação
 let actions = []; // Armazenar as ações de animação
 
-// Função para carregar o modelo e adicionar animação
+// Carregar o som
+const listener = new THREE.AudioListener();
+camera.add(listener);
+const audioLoader = new THREE.AudioLoader();
+
+// Função para carregar o modelo e adicionar animação e som
 function loadModel(positionX, delay) {
   const loader = new GLTFLoader();
   loader.load('Globo.glb', function (gltf) {
@@ -37,6 +58,25 @@ function loadModel(positionX, delay) {
       // Preparar as ações de animação do modelo
       clips.forEach((clip) => {
         const action = mixer.clipAction(clip);
+        action.setLoop(THREE.LoopOnce); // Definir para rodar apenas uma vez
+        action.clampWhenFinished = true; // Manter a última pose quando terminar
+
+        // Adicionar som ao modelo
+        const sound = new THREE.PositionalAudio(listener);
+        audioLoader.load('whooshMid.mp3', function (buffer) {
+          sound.setBuffer(buffer);
+          sound.setRefDistance(20);
+          sound.setLoop(false); // Não repetir o som
+          model.add(sound);
+
+          // Tocar o som quando a animação começar
+          action._play = action.play;
+          action.play = function () {
+            sound.play();
+            action._play();
+          };
+        });
+
         actions.push({ action, delay });
       });
     }
@@ -75,7 +115,7 @@ animate();
 function startAnimation() {
   actions.forEach(({ action, delay }) => {
     setTimeout(() => {
-      action.play();
+      action.reset().play();
     }, delay);
   });
 }
@@ -91,6 +131,15 @@ function togglePauseAnimation() {
   document.getElementById('pauseButton').innerText = isPaused ? 'Resume Animation' : 'Pause Animation';
 }
 
+// Função para reiniciar as animações
+function restartAnimation() {
+  actions.forEach(({ action }) => {
+    action.stop();
+  });
+  startAnimation();
+}
+
 // Adicionar eventos de clique aos botões
 document.getElementById('startButton').addEventListener('click', startAnimation);
 document.getElementById('pauseButton').addEventListener('click', togglePauseAnimation);
+document.getElementById('restartButton').addEventListener('click', restartAnimation);
