@@ -17,34 +17,43 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(5, 5, 5).normalize();
 scene.add(directionalLight);
 
-let mixer; // Declarar o mixer de animação
+let mixers = []; // Declarar os mixers de animação
 let actions = []; // Armazenar as ações de animação
 
-// Carregar o modelo 3D
-const loader = new GLTFLoader();
-loader.load('Globo.glb', function (gltf) {
-  const model = gltf.scene;
-  model.position.y -= 2; // Posicionar o modelo um pouco mais abaixo
-  scene.add(model);
+// Função para carregar o modelo e adicionar animação
+function loadModel(positionX, delay) {
+  const loader = new GLTFLoader();
+  loader.load('Globo.glb', function (gltf) {
+    const model = gltf.scene;
+    model.position.set(positionX, -2, 0); // Posicionar o modelo
+    scene.add(model);
 
-  // Configurar o mixer de animação
-  mixer = new THREE.AnimationMixer(model);
-  const clips = gltf.animations;
+    // Configurar o mixer de animação
+    const mixer = new THREE.AnimationMixer(model);
+    mixers.push(mixer);
+    const clips = gltf.animations;
 
-  if (clips.length > 0) {
-    // Preparar as ações de animação do modelo
-    clips.forEach((clip) => {
-      const action = mixer.clipAction(clip);
-      actions.push(action);
-    });
-  }
+    if (clips.length > 0) {
+      // Preparar as ações de animação do modelo
+      clips.forEach((clip) => {
+        const action = mixer.clipAction(clip);
+        actions.push({ action, delay });
+      });
+    }
 
-  renderer.render(scene, camera);
-}, undefined, function (error) {
-  console.error(error);
-});
+    renderer.render(scene, camera);
+  }, undefined, function (error) {
+    console.error(error);
+  });
+}
 
-camera.position.z = 5;
+// Carregar os 4 modelos alinhados com um delay de 3 segundos
+loadModel(-6, 0);
+loadModel(-2, 3000);
+loadModel(2, 6000);
+loadModel(6, 9000);
+
+camera.position.z = 10;
 
 // Função de animação
 const clock = new THREE.Clock();
@@ -53,20 +62,22 @@ function animate() {
 
   const delta = clock.getDelta(); // Tempo passado desde o último frame
 
-  // Atualizar o mixer de animação
-  if (mixer) mixer.update(delta);
+  // Atualizar os mixers de animação
+  mixers.forEach((mixer) => {
+    mixer.update(delta);
+  });
 
   renderer.render(scene, camera);
 }
 animate();
 
-// Função para iniciar a animação
+// Função para iniciar as animações com delay
 function startAnimation() {
-  if (actions.length > 0) {
-    actions.forEach((action) => {
+  actions.forEach(({ action, delay }) => {
+    setTimeout(() => {
       action.play();
-    });
-  }
+    }, delay);
+  });
 }
 
 // Adicionar evento de clique ao botão
