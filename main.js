@@ -17,21 +17,25 @@ hemisphereLight.position.set(0, 200, 0);
 scene.add(hemisphereLight);
 
 // Adicionar luzes direcionais
-const directionalLight1 = new THREE.DirectionalLight(0xffffff, 2);
-directionalLight1.position.set(1, 1, 1).normalize();
-scene.add(directionalLight1);
+const directionalLightFrente = new THREE.DirectionalLight(0xffffff, 2);
+directionalLightFrente.position.set(0, 0, 10).normalize();
+scene.add(directionalLightFrente);
 
-const directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
-directionalLight2.position.set(-1, 1, -1).normalize();
-scene.add(directionalLight2);
+const directionalLightCima = new THREE.DirectionalLight(0xffffff, 2);
+directionalLightCima.position.set(0, 10, 0).normalize();
+scene.add(directionalLightCima);
 
-const directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
-directionalLight3.position.set(1, -1, 1).normalize();
-scene.add(directionalLight3);
+// const directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
+// directionalLight2.position.set(-1, 1, -1).normalize();
+// scene.add(directionalLight2);
 
-const directionalLight4 = new THREE.DirectionalLight(0xffffff, 2);
-directionalLight4.position.set(-1, -1, -1).normalize();
-scene.add(directionalLight4);
+// const directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
+// directionalLight3.position.set(1, -1, 1).normalize();
+// scene.add(directionalLight3);
+
+// const directionalLight4 = new THREE.DirectionalLight(0xffffff, 2);
+// directionalLight4.position.set(-1, -1, -1).normalize();
+// scene.add(directionalLight4);
 
 let mixers = []; // Declarar os mixers de animação
 let actions = []; // Armazenar as ações de animação
@@ -42,11 +46,12 @@ camera.add(listener);
 const audioLoader = new THREE.AudioLoader();
 
 // Função para carregar o modelo e adicionar animação e som
-function loadModel(positionX, delay) {
+function loadModel(positionX, positionY, delay) {
   const loader = new GLTFLoader();
   loader.load('Globo.glb', function (gltf) {
     const model = gltf.scene;
-    model.position.set(positionX, -2, 0); // Posicionar o modelo
+    model.position.set(positionX, positionY, 0); // Posicionar o modelo
+    model.rotation.set(0, positionX / -10, 0);
     scene.add(model);
 
     // Configurar o mixer de animação
@@ -88,12 +93,12 @@ function loadModel(positionX, delay) {
 }
 
 // Carregar os 4 modelos alinhados com um delay de 3 segundos
-loadModel(-6, 0);
-loadModel(-2, 3000);
-loadModel(2, 6000);
-loadModel(6, 9000);
+loadModel(-8, -2.5, 0);
+loadModel(-2.5, -2, 3000);
+loadModel(2.5, -2, 6000);
+loadModel(8, -2.5, 9000);
 
-camera.position.z = 10;
+camera.position.z = 8;
 
 // Função de animação
 const clock = new THREE.Clock();
