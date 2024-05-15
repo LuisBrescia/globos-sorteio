@@ -80,5 +80,17 @@ function startAnimation() {
   });
 }
 
-// Adicionar evento de clique ao botão
+// Função para pausar/retomar animações
+let isPaused = false;
+function togglePauseAnimation() {
+  isPaused = !isPaused;
+  actions.forEach(({ action }) => {
+    action.paused = isPaused;
+  });
+
+  document.getElementById('pauseButton').innerText = isPaused ? 'Resume Animation' : 'Pause Animation';
+}
+
+// Adicionar eventos de clique aos botões
 document.getElementById('startButton').addEventListener('click', startAnimation);
+document.getElementById('pauseButton').addEventListener('click', togglePauseAnimation);

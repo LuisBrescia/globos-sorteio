@@ -14,7 +14,8 @@
       display: block;
     }
 
-    #startButton {
+    #startButton,
+    #pauseButton {
       position: absolute;
       top: 20px;
       left: 20px;
@@ -25,11 +26,16 @@
       cursor: pointer;
       font-size: 16px;
     }
+
+    #pauseButton {
+      left: 150px;
+    }
   </style>
 </head>
 
 <body>
   <button id="startButton">Start Animation</button>
+  <button id="pauseButton">Pause Animation</button>
   <script type="module" src="/main.js"></script>
 </body>
 
