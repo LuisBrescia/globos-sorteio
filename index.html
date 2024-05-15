@@ -14,10 +14,26 @@
       display: block;
     }
 
-    #startButton,
-    #pauseButton,
-    #restartButton {
+    header {
+      width: 40rem;
+      text-align: center;
       position: absolute;
+      color: #ffffff;
+      font-size: 24px;
+      left: 50%;
+      top: 10%;
+      transform: translate(-50%, 0);
+      font-family: Arial, sans-serif;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .btn-custom {
       top: 20px;
       left: 20px;
       padding: 10px 20px;
@@ -26,6 +42,15 @@
       border-radius: 5px;
       cursor: pointer;
       font-size: 16px;
+      flex: 1;
+    }
+
+    .btn-custom:hover {
+      background-color: #f1f1f1;
+    }
+
+    .btn-custom:active {
+      background-color: #e1e1e1;
     }
 
     #pauseButton {
@@ -39,9 +64,15 @@
 </head>
 
 <body>
-  <button id="startButton">Start Animation</button>
-  <button id="pauseButton">Pause Animation</button>
-  <button id="restartButton">Restart Animation</button>
+  <header>
+    <h1>Sorteio com globos</h1>
+    <div class="button-group">
+      <button id="startButton" class="btn-custom">Iniciar animação</button>
+      <button id="pauseButton" class="btn-custom">Pausar animação</button>
+      <button id="restartButton" class="btn-custom">Reiniciar animação</button>
+    </div>
+  </header>
+
   <script type="module" src="/main.js"></script>
 </body>
 

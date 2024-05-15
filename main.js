@@ -133,7 +133,7 @@ function togglePauseAnimation() {
     action.paused = isPaused;
   });
 
-  document.getElementById('pauseButton').innerText = isPaused ? 'Resume Animation' : 'Pause Animation';
+  document.getElementById('pauseButton').innerText = isPaused ? 'Resumir animação' : 'Pausar animação';
 }
 
 // Função para reiniciar as animações
