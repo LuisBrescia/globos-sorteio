@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 // Configurar a cena, câmera e renderizador
 const scene = new THREE.Scene();
@@ -10,6 +11,11 @@ const renderer = new THREE.WebGLRenderer({ antialias: true }); // Ativar antiali
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio); // Aumentar a resolução
 document.body.appendChild(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; // Ativar amortecimento (inércia)
+controls.dampingFactor = 0.25; // Fator de amortecimento
+controls.screenSpacePanning = false; // Habilitar ou desabilitar o panning na tela
 
 // Adicionar luz hemisférica
 const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1); // Luz hemisférica para iluminação uniforme
@@ -111,9 +117,11 @@ function animate() {
   mixers.forEach((mixer) => {
     mixer.update(delta);
   });
+  controls.update();
 
   renderer.render(scene, camera);
 }
+
 animate();
 
 // Função para iniciar as animações com delay
