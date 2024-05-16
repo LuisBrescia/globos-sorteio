@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-const MACRO_CONTROLS = false; // Ativar controles de órbita
+const MACRO_CONTROLS = true; // Ativar controles de órbita
 
 // Configurar a cena, câmera e renderizador
 const scene = new THREE.Scene();
@@ -14,8 +14,8 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio); // Aumentar a resolução
 document.body.appendChild(renderer.domElement);
 
+const controls = new OrbitControls(camera, renderer.domElement);
 if (MACRO_CONTROLS) {
-  const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true; // Ativar amortecimento (inércia)
   controls.dampingFactor = 0.25; // Fator de amortecimento
   controls.screenSpacePanning = false; // Habilitar ou desabilitar o panning na tela
@@ -35,18 +35,6 @@ const directionalLightCima = new THREE.DirectionalLight(0xFFFFFF, 2);
 directionalLightCima.position.set(0, 10, 0).normalize();
 scene.add(directionalLightCima);
 
-// const directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
-// directionalLight2.position.set(-1, 1, -1).normalize();
-// scene.add(directionalLight2);
-
-// const directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
-// directionalLight3.position.set(1, -1, 1).normalize();
-// scene.add(directionalLight3);
-
-// const directionalLight4 = new THREE.DirectionalLight(0xffffff, 2);
-// directionalLight4.position.set(-1, -1, -1).normalize();
-// scene.add(directionalLight4);
-
 let mixers = []; // Declarar os mixers de animação
 let actions = []; // Armazenar as ações de animação
 
@@ -56,7 +44,6 @@ camera.add(listener);
 const audioLoader = new THREE.AudioLoader();
 
 const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('BOLA-7.jpg');
 
 // Função para carregar o modelo e adicionar animação e som
 function loadModel(positionX, positionY, delay) {
@@ -64,22 +51,17 @@ function loadModel(positionX, positionY, delay) {
   loader.load('Globo.glb', function (gltf) {
     const model = gltf.scene;
     model.position.set(positionX, positionY, 0); // Posicionar o modelo
-    model.rotation.set(0, positionX / -10, 0);
 
     model.traverse((node) => {
-      // console.log(`Node: ${node}`);
-      console.log(`Node name: ${node.name}`);
-      if (node.name === 'Ball_3' || node.name === 'Ball_2001' | node.name === 'Ball_7002' || node.name === 'Ball_1003') {
+      if (node.name.match(/^Ball\d+$/)) {
+        const ballNumber = parseInt(node.name.replace('Ball', ''), 10);
+        console.log(`Ball number: ${ballNumber}`);
+        const textureNumber = ballNumber % 10;
+        console.log(`Texture number: ${textureNumber}`);
+        const texture = textureLoader.load(`Textures/Ball_${textureNumber}.png`);
+        console.log(`Textures/Ball_${textureNumber}.png`);
         node.material = new THREE.MeshStandardMaterial({ map: texture });
       }
-      // if (node.isMesh) {
-      //   if (node.name === 'Ball') { // Substitua 'Ball' pelo nome do nó da bola
-      //     node.material.map = ballTexture;
-      //   } else if (node.name === 'Globe') { // Substitua 'Globe' pelo nome do nó do globo
-      //     node.material.map = globeTexture;
-      //   }
-      //   node.material.needsUpdate = true;
-      // }
     });
 
     scene.add(model);
