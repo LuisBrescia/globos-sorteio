@@ -2,32 +2,36 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+const MACRO_CONTROLS = false; // Ativar controles de órbita
+
 // Configurar a cena, câmera e renderizador
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x4a0e28); // Definir a cor de fundo
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 0.1, 2000);
 const renderer = new THREE.WebGLRenderer({ antialias: true }); // Ativar antialiasing
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio); // Aumentar a resolução
 document.body.appendChild(renderer.domElement);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; // Ativar amortecimento (inércia)
-controls.dampingFactor = 0.25; // Fator de amortecimento
-controls.screenSpacePanning = false; // Habilitar ou desabilitar o panning na tela
+if (MACRO_CONTROLS) {
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; // Ativar amortecimento (inércia)
+  controls.dampingFactor = 0.25; // Fator de amortecimento
+  controls.screenSpacePanning = false; // Habilitar ou desabilitar o panning na tela
+}
 
 // Adicionar luz hemisférica
-const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1); // Luz hemisférica para iluminação uniforme
+const hemisphereLight = new THREE.HemisphereLight(0xFFFFCC, 0x444444, 1); // Luz hemisférica para iluminação uniforme
 hemisphereLight.position.set(0, 200, 0);
 scene.add(hemisphereLight);
 
 // Adicionar luzes direcionais
-const directionalLightFrente = new THREE.DirectionalLight(0xffffff, 2);
+const directionalLightFrente = new THREE.DirectionalLight(0xFFFFFF, 2);
 directionalLightFrente.position.set(0, 0, 10).normalize();
 scene.add(directionalLightFrente);
 
-const directionalLightCima = new THREE.DirectionalLight(0xffffff, 2);
+const directionalLightCima = new THREE.DirectionalLight(0xFFFFFF, 2);
 directionalLightCima.position.set(0, 10, 0).normalize();
 scene.add(directionalLightCima);
 
@@ -51,6 +55,9 @@ const listener = new THREE.AudioListener();
 camera.add(listener);
 const audioLoader = new THREE.AudioLoader();
 
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load('BOLA-7.jpg');
+
 // Função para carregar o modelo e adicionar animação e som
 function loadModel(positionX, positionY, delay) {
   const loader = new GLTFLoader();
@@ -58,6 +65,23 @@ function loadModel(positionX, positionY, delay) {
     const model = gltf.scene;
     model.position.set(positionX, positionY, 0); // Posicionar o modelo
     model.rotation.set(0, positionX / -10, 0);
+
+    model.traverse((node) => {
+      // console.log(`Node: ${node}`);
+      console.log(`Node name: ${node.name}`);
+      if (node.name === 'Ball_3' || node.name === 'Ball_2001' | node.name === 'Ball_7002' || node.name === 'Ball_1003') {
+        node.material = new THREE.MeshStandardMaterial({ map: texture });
+      }
+      // if (node.isMesh) {
+      //   if (node.name === 'Ball') { // Substitua 'Ball' pelo nome do nó da bola
+      //     node.material.map = ballTexture;
+      //   } else if (node.name === 'Globe') { // Substitua 'Globe' pelo nome do nó do globo
+      //     node.material.map = globeTexture;
+      //   }
+      //   node.material.needsUpdate = true;
+      // }
+    });
+
     scene.add(model);
 
     // Configurar o mixer de animação
@@ -99,12 +123,9 @@ function loadModel(positionX, positionY, delay) {
 }
 
 // Carregar os 4 modelos alinhados com um delay de 3 segundos
-loadModel(-8, -2.5, 0);
-loadModel(-2.5, -2, 3000);
-loadModel(2.5, -2, 6000);
-loadModel(8, -2.5, 9000);
+loadModel(0, -2, 0);
 
-camera.position.z = 8;
+camera.position.z = 600;
 
 // Função de animação
 const clock = new THREE.Clock();
@@ -117,7 +138,10 @@ function animate() {
   mixers.forEach((mixer) => {
     mixer.update(delta);
   });
-  controls.update();
+
+  if (MACRO_CONTROLS) {
+    controls.update();
+  }
 
   renderer.render(scene, camera);
 }
