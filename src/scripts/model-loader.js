@@ -30,28 +30,34 @@ export function loadModel(positionX, positionY, delay) {
     mixers.push(mixer);
     const clips = gltf.animations;
 
+    let index = 0;
+
     if (clips.length > 0) {
       clips.forEach((clip) => {
-        const action = mixer.clipAction(clip);
-        action.setLoop(THREE.LoopOnce);
-        action.clampWhenFinished = true;
 
-        const sound = new THREE.PositionalAudio(listener);
-        audioLoader.load('audio/whooshMid.mp3', function (buffer) {
-          sound.setBuffer(buffer);
-          sound.setRefDistance(200);
-          sound.setLoop(false);
-          sound.setVolume(0.5);
-          model.add(sound);
+        if (index % 2 == 0) {
+          const action = mixer.clipAction(clip);
+          action.setLoop(THREE.LoopOnce);
+          action.clampWhenFinished = true;
 
-          action._play = action.play;
-          action.play = function () {
-            sound.play();
-            action._play();
-          };
-        });
+          const sound = new THREE.PositionalAudio(listener);
+          audioLoader.load('audio/whooshMid.mp3', function (buffer) {
+            sound.setBuffer(buffer);
+            sound.setRefDistance(200);
+            sound.setLoop(false);
+            sound.setVolume(0.5);
+            model.add(sound);
 
-        actions.push({ action, delay });
+            action._play = action.play;
+            action.play = function () {
+              sound.play();
+              action._play();
+            };
+          });
+
+          actions.push({ action, delay });
+        }
+        index++;
       });
     }
 
