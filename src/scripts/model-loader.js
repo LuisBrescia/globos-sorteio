@@ -6,20 +6,22 @@ import { audioLoader, listener } from './audio-loader.js';
 const textureLoader = new THREE.TextureLoader();
 export let actions = [];
 
-export function loadModel(positionX, positionY, delay) {
+export function loadModel() {
   const loader = new GLTFLoader();
-  loader.load('4Globe.glb', function (gltf) {
+  loader.load('4Globe.glb', (gltf) => {
     const model = gltf.scene;
-    model.position.set(positionX, positionY, 0);
+    model.position.set(0, -2, 0);
 
     model.traverse((node) => {
-      console.log(node);
       if (node.isMesh && node.name.match(/^Ball\d+$/)) {
         node.castShadow = true;
         node.receiveShadow = true;
         const ballNumber = parseInt(node.name.replace('Ball', ''), 10);
         const textureNumber = ballNumber % 10;
+
         const texture = textureLoader.load(`textures/Ball_${textureNumber}.png`);
+        texture.flipY = false;
+
         node.material = new THREE.MeshStandardMaterial({ map: texture });
       }
     });
@@ -29,37 +31,37 @@ export function loadModel(positionX, positionY, delay) {
     const mixer = new THREE.AnimationMixer(model);
     mixers.push(mixer);
     const clips = gltf.animations;
+    const animationNames = [];
 
-    let index = 0;
+    console.log(clips);
 
-    if (clips.length > 0) {
-      clips.forEach((clip) => {
+    // for (let i = 0; i <= 9; i++) {
+    //   for (let j = 1; j <= 4; j++) {
+    //     animationNames.push(`Globe${j}`, `Ball${j}${i}`, `Sphere.00${j}`);
+    //   }
+    // }
 
-        if (index % 2 == 0) {
-          const action = mixer.clipAction(clip);
-          action.setLoop(THREE.LoopOnce);
-          action.clampWhenFinished = true;
+    // let selecionados = [];
 
-          const sound = new THREE.PositionalAudio(listener);
-          audioLoader.load('audio/whooshMid.mp3', function (buffer) {
-            sound.setBuffer(buffer);
-            sound.setRefDistance(200);
-            sound.setLoop(false);
-            sound.setVolume(0.5);
-            model.add(sound);
+    // animationNames.forEach((name) => {
+    //   const clipSelecionado = clips.find((clip) => clip.name === name);
+    //   if (clipSelecionado) {
+    //     selecionados.push(clipSelecionado);
+    //     const actionSelecionado = mixer.clipAction(clipSelecionado);
+    //     actionSelecionado.setLoop(THREE.LoopOnce);
+    //     actionSelecionado.clampWhenFinished = true;
+    //     actions.push(actionSelecionado);
+    //   }
+    // });
 
-            action._play = action.play;
-            action.play = function () {
-              sound.play();
-              action._play();
-            };
-          });
+    // console.log(selecionados);
 
-          actions.push({ action, delay });
-        }
-        index++;
-      });
-    }
+    clips.forEach((clip) => {
+      const action = mixer.clipAction(clip);
+      action.setLoop(THREE.LoopOnce);
+      action.clampWhenFinished = true;
+      actions.push(action);
+    });
 
     renderer.render(scene, camera);
   }, undefined, function (error) {
