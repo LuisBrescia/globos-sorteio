@@ -1,5 +1,7 @@
 body {
       margin: 0;
+      background: linear-gradient(144deg, #c420ca 0%, #2989d8 50%, #681e99 100%);
+      /* 4a0e28 */
     }
 
     canvas {

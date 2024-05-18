@@ -8,12 +8,11 @@ const MACRO_CONTROLS = false; // Ativar controles de órbita
 
 export function initScene() {
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x4a0e28);
 
   camera = new THREE.PerspectiveCamera(1, window.innerWidth / window.innerHeight, 0.1, 2000);
   camera.position.z = 600;
 
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Use sombras suaves
   renderer.setSize(window.innerWidth, window.innerHeight);
