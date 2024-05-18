@@ -19,7 +19,7 @@ export function loadModel() {
         const ballNumber = parseInt(node.name.replace('Ball', ''), 10);
         const textureNumber = ballNumber % 10;
 
-        const texture = textureLoader.load(`textures/Ball_${textureNumber}.png`);
+        const texture = textureLoader.load(`Textures/Ball_${textureNumber}.png`);
         texture.flipY = false;
 
         node.material = new THREE.MeshStandardMaterial({ map: texture });

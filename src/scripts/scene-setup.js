@@ -30,11 +30,11 @@ export function initScene() {
   hemisphereLight.position.set(0, 200, 0);
   scene.add(hemisphereLight);
 
-  const directionalLightFrente = new THREE.DirectionalLight(0xFFFFFF, 2);
+  const directionalLightFrente = new THREE.DirectionalLight(0xFFFF00, 2);
   directionalLightFrente.position.set(0, 0, 10).normalize();
   scene.add(directionalLightFrente);
 
-  const directionalLightCima = new THREE.DirectionalLight(0xFFFFFF, 2);
+  const directionalLightCima = new THREE.DirectionalLight(0xFFFF00, 2);
   directionalLightCima.position.set(0, 10, 0).normalize();
   scene.add(directionalLightCima);
 }
