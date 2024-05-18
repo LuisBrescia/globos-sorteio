@@ -51,7 +51,7 @@ export function loadModel() {
         node.material = new THREE.MeshStandardMaterial({ map: texture, roughness: 1, metalness: 0.5 });
       } else if (node.isMesh && node.name.startsWith('Sphere')) {
         const texture = textureLoader.load(`Textures/Globe.jpg`);
-        node.material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.5, metalness: 1 });
+        node.material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.3, metalness: 1 });
       } else if (!node.isMesh) {
         console.log("NOT MESH");
       }
