@@ -21,14 +21,19 @@ function shuffle(array) {
 }
 
 const order = [];
-
 for (let i = 0; i < 4; i++) {
   const array = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
   order.push(array);
 }
 
-// Guardar o ordem no localStorage como GloboSorteioOrdem
-localStorage.setItem('GloboSorteioOrdem', JSON.stringify(order));
+const orderLocalStorage = Array.from({ length: 10 }, () => []);
+for (let i = 0; i < 10; i++) {
+  for (let j = 0; j < 4; j++) {
+    orderLocalStorage[i].push(order[j][i]);
+  }
+}
+console.log(orderLocalStorage);
+localStorage.setItem('GloboSorteioOrdem', JSON.stringify(orderLocalStorage));
 
 export function loadModel() {
   const loader = new GLTFLoader();
@@ -43,13 +48,12 @@ export function loadModel() {
         const texture = textureLoader.load(`Textures/Ball_${textureNumber}.png`);
         texture.flipY = false;
         node.material = new THREE.MeshStandardMaterial({ map: texture });
-        node.castShadow = true;
-        node.receiveShadow = true;
       } else if (node.isMesh) {
-        node.castShadow = true;
-        node.receiveShadow = true;
         node.material.metalness = 1;
-        node.material.roughness = 0.1;
+        node.material.roughness = 0;
+        console.log("MESH", node.name);
+      } else {
+        console.log("NOT MESH:", node.name);
       }
     });
 

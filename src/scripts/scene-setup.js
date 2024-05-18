@@ -30,20 +30,17 @@ export function initScene() {
   // Carregar o ambiente EXR
   const exrLoader = new EXRLoader();
   exrLoader.load('sunset.exr', function (texture) {
+    console.log(texture);
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture;
   });
 
-  const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(5, 10, 7.5);
-  light.castShadow = true;
-  light.shadow.mapSize.width = 2048;
-  light.shadow.mapSize.height = 2048;
-  light.shadow.bias = -0.0001;
-  scene.add(light);
-
-  const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
+  const ambientLight = new THREE.AmbientLight(0xffffff, 2);
   scene.add(ambientLight);
+
+  const direcionaLight = new THREE.DirectionalLight(0xffffff, 2);
+  direcionaLight.position.set(0, 0, 100);
+  direcionaLight.castShadow = true; // Habilitar sombras
 }
 
 const clock = new THREE.Clock();
