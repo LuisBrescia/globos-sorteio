@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
 
 export let scene, camera, renderer, controls;
 export const mixers = [];
@@ -27,12 +27,12 @@ export function initScene() {
     controls.screenSpacePanning = false;
   }
 
-  // Carregar o ambiente HDR
-  const rgbeLoader = new RGBELoader();
-  rgbeLoader.load('path/to/your/hdr.hdr', function (texture) {
+  // Carregar o ambiente EXR
+  const exrLoader = new EXRLoader();
+  exrLoader.load('sunset.exr', function (texture) {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture;
-    scene.background = texture;
+    // scene.background = texture;
   });
 
   const light = new THREE.DirectionalLight(0xffffff, 1);

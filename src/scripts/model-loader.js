@@ -34,6 +34,7 @@ export function loadModel() {
     model.position.set(0, -2, 0);
 
     model.traverse((node) => {
+      // node.material = new THREE.MeshStandardMaterial({ metalness: 1 });
       if (node.name.match(/^Ball\d+$/)) {
         const ballNumber = node.name.replace('Ball', '');
         const textureNumber = order[parseInt(ballNumber[0], 10) - 1][parseInt(ballNumber[1], 10)];
