@@ -14,6 +14,8 @@ export function initScene() {
   camera.position.z = 600;
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Use sombras suaves
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
@@ -26,14 +28,37 @@ export function initScene() {
   }
 
   // Adicionar luzes
+  // Luz ambiente para iluminação geral suave
   const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
-  ambientLight.position.set(0, 0, 0);
   scene.add(ambientLight);
 
   const directionalLight = new THREE.DirectionalLight(0xFFFFFF, 1);
-  directionalLight.position.set(0, -1, 2);
+  directionalLight.position.set(0, 10, 10);
+  directionalLight.castShadow = true;
+  directionalLight.shadow.mapSize.width = 2048;
+  directionalLight.shadow.mapSize.height = 2048;
+  directionalLight.shadow.camera.near = 0.5;
+  directionalLight.shadow.camera.far = 50;
+  directionalLight.shadow.camera.left = -10;
+  directionalLight.shadow.camera.right = 10;
+  directionalLight.shadow.camera.top = 10;
+  directionalLight.shadow.camera.bottom = -10;
+  directionalLight.shadow.bias = -0.0001;
   scene.add(directionalLight);
 
+  const spotLight = new THREE.SpotLight(0xFFFFFF, 2);
+  spotLight.position.set(5, 20, 5);
+  spotLight.angle = Math.PI / 6;
+  spotLight.penumbra = 0.5;
+  spotLight.decay = 2;
+  spotLight.distance = 200;
+  spotLight.castShadow = true;
+  spotLight.shadow.mapSize.width = 2048;
+  spotLight.shadow.mapSize.height = 2048;
+  spotLight.shadow.camera.near = 0.1;
+  spotLight.shadow.camera.far = 50;
+  spotLight.shadow.bias = -0.0001;
+  scene.add(spotLight);
   // const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0x444444, .5);
   // hemisphereLight.position.set(0, 200, 0);
   // scene.add(hemisphereLight);
