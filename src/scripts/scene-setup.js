@@ -29,7 +29,7 @@ export function initScene() {
 
   // Carregar o ambiente EXR
   const exrLoader = new EXRLoader();
-  exrLoader.load('sunset.exr', function (texture) {
+  exrLoader.load('custom.exr', function (texture) {
     console.log(texture);
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture;

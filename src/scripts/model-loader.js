@@ -53,7 +53,7 @@ export function loadModel() {
         node.material.roughness = 1;
       } else if (node.isMesh) {
         node.material.metalness = 1;
-        node.material.roughness = 0.1;
+        node.material.roughness = 0.25;
         console.log("MESH", node.name);
       } else {
         console.log("NOT MESH:", node.name);
