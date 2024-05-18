@@ -5,7 +5,7 @@ import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader';
 export let scene, camera, renderer, controls;
 export const mixers = [];
 
-const MACRO_CONTROLS = true; // Ativar controles de órbita
+const MACRO_CONTROLS = false; // Ativar controles de órbita
 
 export function initScene() {
   scene = new THREE.Scene();
@@ -32,7 +32,6 @@ export function initScene() {
   exrLoader.load('sunset.exr', function (texture) {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture;
-    // scene.background = texture;
   });
 
   const light = new THREE.DirectionalLight(0xffffff, 1);

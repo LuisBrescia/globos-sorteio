@@ -27,6 +27,9 @@ for (let i = 0; i < 4; i++) {
   order.push(array);
 }
 
+// Guardar o ordem no localStorage como GloboSorteioOrdem
+localStorage.setItem('GloboSorteioOrdem', JSON.stringify(order));
+
 export function loadModel() {
   const loader = new GLTFLoader();
   loader.load('4Globe.glb', (gltf) => {
@@ -34,19 +37,19 @@ export function loadModel() {
     model.position.set(0, -2, 0);
 
     model.traverse((node) => {
-      // node.material = new THREE.MeshStandardMaterial({ metalness: 1 });
       if (node.name.match(/^Ball\d+$/)) {
         const ballNumber = node.name.replace('Ball', '');
         const textureNumber = order[parseInt(ballNumber[0], 10) - 1][parseInt(ballNumber[1], 10)];
         const texture = textureLoader.load(`Textures/Ball_${textureNumber}.png`);
         texture.flipY = false;
         node.material = new THREE.MeshStandardMaterial({ map: texture });
-      }
-      if (node.isMesh) {
         node.castShadow = true;
         node.receiveShadow = true;
-        node.material.envMap = scene.environment; // Aplicar o environment map
-        node.material.envMapIntensity = 1;
+      } else if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+        node.material.metalness = 1;
+        node.material.roughness = 0.1;
       }
     });
 
