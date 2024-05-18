@@ -27,12 +27,10 @@ export function loadModel() {
     });
 
     scene.add(model);
-
     const mixer = new THREE.AnimationMixer(model);
     mixers.push(mixer);
     const clips = gltf.animations;
     const animationNames = [];
-
     console.log(clips);
 
     // for (let i = 0; i <= 9; i++) {
@@ -53,8 +51,6 @@ export function loadModel() {
     //     actions.push(actionSelecionado);
     //   }
     // });
-
-    // console.log(selecionados);
 
     clips.forEach((clip) => {
       const action = mixer.clipAction(clip);
