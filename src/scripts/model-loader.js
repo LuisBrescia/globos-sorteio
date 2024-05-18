@@ -36,27 +36,25 @@ export function loadModel() {
     model.position.set(0, -2, 0);
 
     model.traverse((node) => {
-
+      console.log(node.name);
       if (node.isMesh && node.name.match(/^Ball\d+$/)) {
-        node.castShadow = true;
-        node.receiveShadow = true;
+        node.castShadow = false;
+        node.receiveShadow = false;
         const ballNumber = node.name.replace('Ball', '');
         const textureNumber = order[parseInt(ballNumber[0], 10) - 1][parseInt(ballNumber[1], 10)];
         const texture = textureLoader.load(`Textures/Ball_${textureNumber}.png`);
         texture.flipY = false;
         node.material = new THREE.MeshStandardMaterial({ map: texture });
       } else if (node.isMesh && node.name.startsWith('Base')) {
-        console.log(node.name);
         const texture = textureLoader.load(`Textures/Wood.jpg`);
         node.material = new THREE.MeshStandardMaterial({ map: texture, roughness: 1, metalness: 0.5 });
       } else if (node.isMesh && node.name.startsWith('Sphere')) {
-        const texture = textureLoader.load(`Textures/Globe.jpg`);
-        node.material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.3, metalness: 1 });
+        node.material = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 1 });
       } else if (!node.isMesh) {
         console.log("NOT MESH");
+        model.receiveShadow = false;
+        model.castShadow = false;
       }
-
-      // Globe tube parte de baixo // preto
     });
 
     scene.add(model);
