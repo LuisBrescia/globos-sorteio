@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 export let scene, camera, renderer, controls;
 export const mixers = [];
 
-const MACRO_CONTROLS = false; // Ativar controles de órbita
+const MACRO_CONTROLS = true; // Ativar controles de órbita
 
 export function initScene() {
   scene = new THREE.Scene();
@@ -13,8 +14,8 @@ export function initScene() {
   camera.position.z = 600;
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Use sombras suaves
+  renderer.shadowMap.enabled = true; // Habilitar sombras
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
@@ -26,49 +27,24 @@ export function initScene() {
     controls.screenSpacePanning = false;
   }
 
-  // Adicionar luzes
-  // Luz ambiente para iluminação geral suave
-  const ambientLight = new THREE.AmbientLight(0xFFFFFF, 1);
+  // Carregar o ambiente HDR
+  const rgbeLoader = new RGBELoader();
+  rgbeLoader.load('path/to/your/hdr.hdr', function (texture) {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = texture;
+    scene.background = texture;
+  });
+
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(5, 10, 7.5);
+  light.castShadow = true;
+  light.shadow.mapSize.width = 2048;
+  light.shadow.mapSize.height = 2048;
+  light.shadow.bias = -0.0001;
+  scene.add(light);
+
+  const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
   scene.add(ambientLight);
-
-  const directionalLight = new THREE.DirectionalLight(0xfcd34d, 2);
-  directionalLight.position.set(0, 10, 10);
-  directionalLight.castShadow = true;
-  directionalLight.shadow.mapSize.width = 2048;
-  directionalLight.shadow.mapSize.height = 2048;
-  directionalLight.shadow.camera.near = 0.5;
-  directionalLight.shadow.camera.far = 50;
-  directionalLight.shadow.camera.left = -10;
-  directionalLight.shadow.camera.right = 10;
-  directionalLight.shadow.camera.top = 10;
-  directionalLight.shadow.camera.bottom = -10;
-  directionalLight.shadow.bias = -0.0001;
-  scene.add(directionalLight);
-
-  const spotLight = new THREE.SpotLight(0xFFFFFF, 2);
-  spotLight.position.set(5, 20, 5);
-  spotLight.angle = Math.PI / 6;
-  spotLight.penumbra = 0.5;
-  spotLight.decay = 2;
-  spotLight.distance = 200;
-  spotLight.castShadow = true;
-  spotLight.shadow.mapSize.width = 2048;
-  spotLight.shadow.mapSize.height = 2048;
-  spotLight.shadow.camera.near = 0.1;
-  spotLight.shadow.camera.far = 50;
-  spotLight.shadow.bias = -0.0001;
-  scene.add(spotLight);
-  // const hemisphereLight = new THREE.HemisphereLight(0xFFFFFF, 0x444444, .5);
-  // hemisphereLight.position.set(0, 200, 0);
-  // scene.add(hemisphereLight);
-
-  // const directionalLightFrente = new THREE.DirectionalLight(0xFFFFFF, .5);
-  // directionalLightFrente.position.set(10, 0, 10).normalize();
-  // scene.add(directionalLightFrente);
-
-  // const directionalLightCima = new THREE.DirectionalLight(0xFFFFFF, .5);
-  // directionalLightCima.position.set(-10, 10, 0).normalize();
-  // scene.add(directionalLightCima);
 }
 
 const clock = new THREE.Clock();
@@ -87,3 +63,9 @@ export function animate() {
 
   renderer.render(scene, camera);
 }
+
+window.addEventListener('resize', () => {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+});
