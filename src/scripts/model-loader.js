@@ -47,10 +47,13 @@ export function loadModel() {
         const textureNumber = order[parseInt(ballNumber[0], 10) - 1][parseInt(ballNumber[1], 10)];
         const texture = textureLoader.load(`Textures/Ball_${textureNumber}.png`);
         texture.flipY = false;
+        // inverter cores da textura
         node.material = new THREE.MeshStandardMaterial({ map: texture });
+        node.material.metalness = 0;
+        node.material.roughness = 1;
       } else if (node.isMesh) {
         node.material.metalness = 1;
-        node.material.roughness = 0;
+        node.material.roughness = 0.1;
         console.log("MESH", node.name);
       } else {
         console.log("NOT MESH:", node.name);

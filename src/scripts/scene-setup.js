@@ -35,12 +35,8 @@ export function initScene() {
     scene.environment = texture;
   });
 
-  const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+  const ambientLight = new THREE.AmbientLight(0x000000, 1);
   scene.add(ambientLight);
-
-  const direcionaLight = new THREE.DirectionalLight(0xffffff, 2);
-  direcionaLight.position.set(0, 0, 100);
-  direcionaLight.castShadow = true; // Habilitar sombras
 }
 
 const clock = new THREE.Clock();
