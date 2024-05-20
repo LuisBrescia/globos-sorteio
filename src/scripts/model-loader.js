@@ -5,12 +5,12 @@ import { mixers, scene, renderer, camera } from './scene-setup.js';
 const textureLoader = new THREE.TextureLoader();
 export let actions = [];
 
-const order = [
-  [5, 0, 7, 8, 1, 2, 9, 4, 3, 6],
-  [7, 5, 6, 2, 3, 0, 1, 8, 9, 4],
-  [2, 9, 6, 0, 4, 5, 3, 7, 1, 8],
-  [3, 9, 2, 4, 1, 5, 6, 7, 8, 0],
-];
+// const order = [
+//   [5, 0, 7, 8, 1, 2, 9, 4, 3, 6],
+//   [7, 5, 6, 2, 3, 0, 1, 8, 9, 4],
+//   [2, 9, 6, 0, 4, 5, 3, 7, 1, 8],
+//   [3, 9, 2, 4, 1, 5, 6, 7, 8, 0],
+// ];
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -20,11 +20,11 @@ function shuffle(array) {
   return array;
 }
 
-// const order = [];
-// for (let i = 0; i < 4; i++) {
-//   const array = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-//   order.push(array);
-// }
+const order = [];
+for (let i = 0; i < 4; i++) {
+  const array = shuffle([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+  order.push(array);
+}
 
 const orderLocalStorage = Array.from({ length: 10 }, () => []);
 for (let i = 0; i < 10; i++) {
