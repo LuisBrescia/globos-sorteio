@@ -17,7 +17,7 @@ export function initScene() {
   renderer.shadowMap.enabled = true; // Habilitar sombras
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
+  // renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
 
   controls = MACRO_CONTROLS ? new OrbitControls(camera, renderer.domElement) : null;
