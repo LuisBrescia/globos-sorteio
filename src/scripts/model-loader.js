@@ -43,6 +43,12 @@ export function loadModel() {
           node.material = new THREE.MeshStandardMaterial({ map: texture });
           node.material.metalness = 0;
           node.material.roughness = 1;
+          // tirar sombras que batem nela
+          node.castShadow = false;
+          node.receiveShadow = false;
+          // bola tem que ser branca
+          node.material.color = new THREE.Color(0xffffff);
+          node.material.transparent = true;
         }
       } else if (node.isMesh) {
         node.material.metalness = 1;
