@@ -14,7 +14,7 @@ export function togglePauseAnimation() {
     action.paused = isPaused;
   });
 
-  document.getElementById('pauseButton').innerText = isPaused ? 'Resumir animação' : 'Pausar animação';
+  document.getElementById('pauseButton').innerText = isPaused ? 'Resumir' : 'Pausar';
 }
 
 export function restartAnimation() {
