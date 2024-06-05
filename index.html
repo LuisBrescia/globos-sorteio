@@ -18,18 +18,37 @@
     </div>
   </header> -->
 
-  <div id="menu-wrapper">
-    <div class="menu-icon" id="menuButton">
+  <div id="menuWrapper">
+    <div id="menuButton">
       <div class="menu-icon__line"></div>
       <div class="menu-icon__line"></div>
       <div class="menu-icon__line"></div>
     </div>
 
-    <div class="menu-content" id="menuContent">
+    <div id="menuContent">
       <button id="startButton" class="btn-custom">Iniciar</button>
       <button id="pauseButton" class="btn-custom">Pausar</button>
       <button id="restartButton" class="btn-custom">Reiniciar</button>
       <button id="chooseOrder" class="btn-custom">Customizar</button>
+    </div>
+  </div>
+
+  <div id="modal" class="active">
+    <div id="dialog">
+      <div class="dialog-header">
+        <span>
+          Customizar ordem
+        </span>
+        <button id="closeDialog" class="btn-custom">X</button>
+      </div>
+
+      <div class="dialog-content">
+        <input type="text" id="orderInput" placeholder="Digite a ordem dos números separados por vírgula">
+      </div>
+
+      <div class="dialog-footer">
+        <button id="saveOrder" class="btn-custom">Salvar e iniciar</button>
+      </div>
     </div>
   </div>
 
