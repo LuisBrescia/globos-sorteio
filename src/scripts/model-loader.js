@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { mixers, scene, renderer, camera } from './scene-setup.js';
-import { predefinedOrder } from '@/utils/predefinedOrder.js';
+import { predefinedOrder } from '@/config/predefinedOrder.js';
 
 const textureLoader = new THREE.TextureLoader();
 export let actions = [];

@@ -8,16 +8,7 @@
   <link rel="stylesheet" href="/src/css/style.css">
 </head>
 
-<body>
-  <!-- <header>
-    <h1>Sorteio com globos</h1>
-    <div class="button-group">
-      <button id="startButton" class="btn-custom">Iniciar animação</button>
-      <button id="pauseButton" class="btn-custom">Pausar animação</button>
-      <button id="restartButton" class="btn-custom">Reiniciar animação</button>
-    </div>
-  </header> -->
-
+<body data-theme="dark">
   <div id="menuWrapper">
     <div id="menuButton">
       <div class="menu-icon__line"></div>
@@ -26,24 +17,39 @@
     </div>
 
     <div id="menuContent">
-      <button id="startButton" class="btn-custom">Iniciar</button>
-      <button id="pauseButton" class="btn-custom">Pausar</button>
+      <button id="stateButton" class="btn-custom">Iniciar</button>
       <button id="restartButton" class="btn-custom">Reiniciar</button>
-      <button id="chooseOrder" class="btn-custom">Customizar</button>
+      <button id="customButton" class="btn-custom">Customizar</button>
+      <button id="changeThemeButton" class="btn-custom">Alterar tema</button>
     </div>
   </div>
 
-  <div id="modal" class="active">
+  <div id="modal">
     <div id="dialog">
       <div class="dialog-header">
         <span>
           Customizar ordem
         </span>
-        <button id="closeDialog" class="btn-custom">X</button>
+        <!-- <button id="closeDialog" class="btn-custom">X</button> -->
+        <div id="closeModal" class="close-btn">
+          <div class="close-icon__line"></div>
+          <div class="close-icon__line"></div>
+          <div class="close-icon__line"></div>
+        </div>
       </div>
 
       <div class="dialog-content">
-        <input type="text" id="orderInput" placeholder="Digite a ordem dos números separados por vírgula">
+        <h3>Globo 1</h3>
+        <div class="button-section" id="globo1"></div>
+
+        <h3>Globo 2</h3>
+        <div class="button-section" id="globo2"></div>
+
+        <h3>Globo 3</h3>
+        <div class="button-section" id="globo3"></div>
+
+        <h3>Globo 4</h3>
+        <div class="button-section" id="globo4"></div>
       </div>
 
       <div class="dialog-footer">
