@@ -20,8 +20,8 @@
   --dark-color: #fafafa;
   --dark-color-active: #f4f4f5; */
   --light-color: #f9a8d4;
-  --dark-color: #500724;
-  --dark-color-active: #831843;
+  --dark-color: #4a0e28;
+  --dark-color-active: #6d163c;
 }
 
 body {
@@ -245,7 +245,12 @@ canvas {
 
 .dialog-footer .btn-custom {
   width: 100%;
+  height: 100%;
   font-size: 1.25rem;
+}
+
+.dialog-footer {
+  height: 4rem;
 }
 
 .button-section {

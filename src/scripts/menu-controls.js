@@ -4,10 +4,10 @@ export const toggleMenu = () => {
 
 export const changeTheme = () => {
   const theme = document.documentElement.getAttribute('data-theme');
-  if (theme === 'dark') {
-    document.documentElement.setAttribute('data-theme', 'light');
-  } else {
+  if (theme === 'light') {
     document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-theme', 'light');
   }
 }
 
