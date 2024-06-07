@@ -39,6 +39,12 @@
       </div>
 
       <div class="dialog-content">
+        <div class="paginator">
+          <button id="prevRound" class="btn-custom">&lt;</button>
+          <span id="roundDisplay" style="text-align: center; pointer-events: none;" class="btn-custom">Rodada 1</span>
+          <button id="nextRound" class="btn-custom">&gt;</button>
+        </div>
+
         <h3>Globo 1</h3>
         <div class="button-section" id="globo1"></div>
 
@@ -53,7 +59,7 @@
       </div>
 
       <div class="dialog-footer">
-        <button id="saveOrder" class="btn-custom">Salvar e iniciar</button>
+        <button id="saveOrder" class="btn-custom">Salvar no localStorage</button>
       </div>
     </div>
   </div>

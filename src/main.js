@@ -17,13 +17,14 @@ document.addEventListener('click', bodyCloseMenu);
 document.getElementById('closeModal').addEventListener('click', closeModal);
 
 document.getElementById('saveOrder').addEventListener('click', () => {
-  // const order = document.getElementById('orderInput').value;
-  // localStorage.setItem('GloboSorteioOrdem', order);
+  localStorage.setItem('GloboSorteioOrdem', JSON.stringify(predefinedOrder));
+  window.location.reload();
   document.getElementById('modal').classList.remove('active');
 });
 
-// main.js
-const predefinedOrder = Array.from({ length: 10 }, () => [null, null, null, null]);
+
+const predefinedOrder = JSON.parse(localStorage.getItem('GloboSorteioOrdem')) || Array.from({ length: 10 }, () => []);
+let currentRound = 0;
 
 function createNumberButtons(globoId) {
   const container = document.getElementById(globoId);
@@ -37,21 +38,66 @@ function createNumberButtons(globoId) {
 }
 
 function selectNumber(globoId, number) {
-  // Deselect previous selection for this globo
-  document.querySelectorAll(`#${globoId} .btn-number`).forEach(btn => btn.classList.remove('selected'));
-
-  // Select the clicked button
-  const button = document.querySelector(`#${globoId} .btn-number:nth-child(${number + 1})`);
-  button.classList.add('selected');
-
-  // Update predefinedOrder
   const globoIndex = parseInt(globoId.replace('globo', '')) - 1;
-  predefinedOrder.forEach(order => order[globoIndex] = null);
-  predefinedOrder[number][globoIndex] = number;
+  const currentSelection = predefinedOrder[currentRound][globoIndex];
+
+  if (currentSelection === number) {
+    predefinedOrder[currentRound][globoIndex] = null;
+  } else {
+    // ? Para não ter números repetidos no mesmo round
+    // if (predefinedOrder[currentRound].includes(number)) {
+    //   alert(`Number ${number} is already selected for this round!`);
+    //   return;
+    // }
+    predefinedOrder[currentRound][globoIndex] = number;
+  }
+
+  updateButtons();
   console.log('Predefined Order:', predefinedOrder);
 }
+function updateButtons() {
+  document.querySelectorAll('.button-section').forEach((container, globoIndex) => {
+    const buttons = container.querySelectorAll('.btn-number');
+    buttons.forEach(button => {
+      const number = parseInt(button.textContent);
+      if (predefinedOrder[currentRound][globoIndex] === number) {
+        button.classList.add('selected');
+      } else {
+        button.classList.remove('selected');
+      }
+
+      if (isNumberUsedInGlobo(globoIndex, number)) {
+        button.classList.add('disabled');
+      } else {
+        button.classList.remove('disabled');
+      }
+    });
+  });
+}
+
+function isNumberUsedInGlobo(globoIndex, number) {
+  return predefinedOrder.some((round, roundIndex) => roundIndex !== currentRound && round[globoIndex] === number);
+}
+
+document.getElementById('prevRound').addEventListener('click', () => {
+  if (currentRound > 0) {
+    currentRound--;
+    document.getElementById('roundDisplay').textContent = `Rodada ${currentRound + 1}`;
+    updateButtons();
+  }
+});
+
+document.getElementById('nextRound').addEventListener('click', () => {
+  if (currentRound < 9) {
+    currentRound++;
+    document.getElementById('roundDisplay').textContent = `Rodada ${currentRound + 1}`;
+    updateButtons();
+  }
+});
 
 createNumberButtons('globo1');
 createNumberButtons('globo2');
 createNumberButtons('globo3');
 createNumberButtons('globo4');
+
+updateButtons();

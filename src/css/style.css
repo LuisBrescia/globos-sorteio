@@ -243,14 +243,14 @@ canvas {
   border: none;
 }
 
+.dialog-footer {
+  height: 4rem;
+}
+
 .dialog-footer .btn-custom {
   width: 100%;
   height: 100%;
   font-size: 1.25rem;
-}
-
-.dialog-footer {
-  height: 4rem;
 }
 
 .button-section {
@@ -276,4 +276,17 @@ canvas {
   background-color: var(--dark-color);
   color: var(--light-color);
   box-shadow: inset 0 0 0 0.25rem var(--light-color);
+}
+
+.paginator {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  /* border: 1px solid red; */
+  /* height: 4rem; */
+}
+
+.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }

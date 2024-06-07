@@ -6,19 +6,12 @@ import { predefinedOrder } from '@/config/predefinedOrder.js';
 const textureLoader = new THREE.TextureLoader();
 export let actions = [];
 
-// Constantes para a quantidade de números e globos
-const QUANTIDADE_NUMEROS = predefinedOrder.length;
-const QUANTIDADE_GLOBOS = predefinedOrder[0].length;
+// pegar predefinedOrder do localStorage
+const sorteioOrder = JSON.parse(localStorage.getItem('GloboSorteioOrdem')) || predefinedOrder;
 
-// Salva a ordem dos números em localStorage
-const orderLocalStorage = Array.from({ length: QUANTIDADE_NUMEROS }, () => []);
-for (let i = 0; i < QUANTIDADE_NUMEROS; i++) {
-  for (let j = 0; j < QUANTIDADE_GLOBOS; j++) {
-    orderLocalStorage[i].push(predefinedOrder[i][j]);
-  }
-}
-console.log(orderLocalStorage);
-localStorage.setItem('GloboSorteioOrdem', JSON.stringify(orderLocalStorage));
+// Constantes para a quantidade de números e globos
+const QUANTIDADE_NUMEROS = sorteioOrder.length;
+// const QUANTIDADE_GLOBOS = sorteioOrder[0].length;
 
 // Função para carregar o modelo
 export function loadModel() {
@@ -37,7 +30,7 @@ export function loadModel() {
         if (ballIndex >= QUANTIDADE_NUMEROS) {
           node.visible = false;
         } else {
-          const textureNumber = predefinedOrder[ballIndex][globoIndex];
+          const textureNumber = sorteioOrder[ballIndex][globoIndex];
           const texture = textureLoader.load(`Textures/Ball_${textureNumber}.png`);
           texture.flipY = false;
           node.material = new THREE.MeshStandardMaterial({ map: texture });
