@@ -10,4 +10,3 @@ export const predefinedOrder = [
   [9, 3, 5, 7],
   [0, 4, 6, 8],
 ];
-

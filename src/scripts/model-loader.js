@@ -1,22 +1,40 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { mixers, scene, renderer, camera } from './scene-setup.js';
 import { predefinedOrder } from '@/config/predefinedOrder.js';
 
 const textureLoader = new THREE.TextureLoader();
 export let actions = [];
 
-// pegar predefinedOrder do localStorage
+// Pegar predefinedOrder do localStorage
 const sorteioOrder = JSON.parse(localStorage.getItem('GloboSorteioOrdem')) || predefinedOrder;
 
-// Constantes para a quantidade de números e globos
-const QUANTIDADE_NUMEROS = sorteioOrder.length;
-// const QUANTIDADE_GLOBOS = sorteioOrder[0].length;
-
-// Função para carregar o modelo
-export function loadModel() {
+export async function loadModel() {
+  const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader');
+  const { DRACOLoader } = await import('three/examples/jsm/loaders/DRACOLoader');
   const loader = new GLTFLoader();
-  loader.load('4Globe.glb', (gltf) => {
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+  loader.setDRACOLoader(dracoLoader);
+
+  // Promises para carregar o modelo GLB
+  const modelPromise = new Promise((resolve, reject) => {
+    loader.load('4Globe-draco.glb', resolve, undefined, reject);
+  });
+
+  // Promises para carregar texturas
+  const texturePromises = [];
+  sorteioOrder.forEach((order) => {
+    order.forEach((textureNumber) => {
+      texturePromises.push(
+        new Promise((resolve, reject) => {
+          textureLoader.load(`Textures/Ball_${textureNumber}.png`, resolve, undefined, reject);
+        })
+      );
+    });
+  });
+
+  // Carregar modelo e texturas em paralelo
+  Promise.all([modelPromise, ...texturePromises]).then(([gltf, ...textures]) => {
     const model = gltf.scene;
     model.position.set(0, -2, 0);
 
@@ -27,19 +45,17 @@ export function loadModel() {
         const ballIndex = parseInt(ballNumber[1], 10);
 
         // Verifica se o número da bola é maior que a quantidade de bolas
-        if (ballIndex >= QUANTIDADE_NUMEROS) {
+        if (ballIndex >= sorteioOrder.length) {
           node.visible = false;
         } else {
           const textureNumber = sorteioOrder[ballIndex][globoIndex];
-          const texture = textureLoader.load(`Textures/Ball_${textureNumber}.png`);
+          const texture = textures.find((tex) => tex.image.src.includes(`Ball_${textureNumber}.png`));
           texture.flipY = false;
           node.material = new THREE.MeshStandardMaterial({ map: texture });
           node.material.metalness = 0;
           node.material.roughness = 1;
-          // tirar sombras que batem nela
           node.castShadow = false;
           node.receiveShadow = false;
-          // bola tem que ser branca
           node.material.color = new THREE.Color(0xffffff);
           node.material.transparent = true;
         }
@@ -65,7 +81,7 @@ export function loadModel() {
     });
 
     renderer.render(scene, camera);
-  }, undefined, function (error) {
-    console.error(error);
+  }).catch((error) => {
+    console.error('Erro ao carregar modelo ou texturas:', error);
   });
 }

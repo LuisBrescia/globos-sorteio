@@ -1,27 +1,13 @@
-import { initScene, animate } from './scripts/scene-setup.js';
-import { loadModel } from './scripts/model-loader.js';
 import { toggleStateAnimation, restartAnimation } from './scripts/animation-controls.js';
 import { toggleMenu, changeTheme, bodyCloseMenu, openModal, closeModal } from './scripts/menu-controls.js';
 
-initScene();
-animate();
-loadModel();
-
-document.getElementById('menuButton').addEventListener('click', toggleMenu);
-document.getElementById('changeThemeButton').addEventListener('click', changeTheme);
-document.getElementById('stateButton').addEventListener('click', toggleStateAnimation);
-document.getElementById('restartButton').addEventListener('click', restartAnimation);
-document.getElementById('customButton').addEventListener('click', openModal);
-
-document.addEventListener('click', bodyCloseMenu);
-document.getElementById('closeModal').addEventListener('click', closeModal);
-
-document.getElementById('saveOrder').addEventListener('click', () => {
-  localStorage.setItem('GloboSorteioOrdem', JSON.stringify(predefinedOrder));
-  window.location.reload();
-  document.getElementById('modal').classList.remove('active');
+document.addEventListener('DOMContentLoaded', async () => {
+  const { initScene, animate } = await import('./scripts/scene-setup.js');
+  const { loadModel } = await import('./scripts/model-loader.js');
+  initScene();
+  animate();
+  loadModel();
 });
-
 
 const predefinedOrder = JSON.parse(localStorage.getItem('GloboSorteioOrdem')) || Array.from({ length: 10 }, () => []);
 let currentRound = 0;
@@ -99,5 +85,20 @@ createNumberButtons('globo1');
 createNumberButtons('globo2');
 createNumberButtons('globo3');
 createNumberButtons('globo4');
+
+document.getElementById('menuButton').addEventListener('click', toggleMenu);
+document.getElementById('changeThemeButton').addEventListener('click', changeTheme);
+document.getElementById('stateButton').addEventListener('click', toggleStateAnimation);
+document.getElementById('restartButton').addEventListener('click', restartAnimation);
+document.getElementById('customButton').addEventListener('click', openModal);
+
+document.addEventListener('click', bodyCloseMenu);
+document.getElementById('closeModal').addEventListener('click', closeModal);
+
+document.getElementById('saveOrder').addEventListener('click', () => {
+  localStorage.setItem('GloboSorteioOrdem', JSON.stringify(predefinedOrder));
+  window.location.reload();
+  document.getElementById('modal').classList.remove('active');
+});
 
 updateButtons();

@@ -14,10 +14,10 @@ export function initScene() {
   camera.position.z = 600;
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.shadowMap.enabled = true; // Habilitar sombras
+  renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
 
   controls = MACRO_CONTROLS ? new OrbitControls(camera, renderer.domElement) : null;
@@ -27,7 +27,6 @@ export function initScene() {
     controls.screenSpacePanning = false;
   }
 
-  // Carregar o ambiente EXR
   const exrLoader = new EXRLoader();
   exrLoader.load('custom.exr', function (texture) {
     console.log(texture);
