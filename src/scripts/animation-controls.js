@@ -1,31 +1,33 @@
 import { actions } from "./model-loader.js";
 
 let isPaused = false;
+let timerHandle = null;
+let remainingTime = 0;
+let startTime = 0;
+let sorteioOrder = [];
+
+function generateResult() {
+  const orderSize = sorteioOrder.findIndex((array) => array.length === 0);
+  return sorteioOrder
+    .slice(0, orderSize)
+    .map((sub) => sub.join(""))
+    .join(", ");
+}
 
 export async function startAnimation() {
-  const sorteioOrder =
+  sorteioOrder =
     (await JSON.parse(localStorage.getItem("GloboSorteioOrdem"))) ||
     Array.from({ length: 10 }, () => []);
 
-  let orderSize = 0;
-  for (let i = 0; i <= sorteioOrder.length; i++) {
-    if (sorteioOrder[i].length === 0) {
-      orderSize = i;
-      break;
-    }
-  }
+  const result = generateResult();
+  const tempoAnimacao = 27 * (result.split(", ").length || 0); // Calculate based on non-empty entries only
 
-  let result = "";
-  for (let i = 0; i < orderSize; i++) {
-    result += sorteioOrder[i].join("");
-    result += i < orderSize - 1 ? ", " : "";
-  }
-
-  const tempoAnimacao = 27 * orderSize;
-  setTimeout(() => {
+  startTime = Date.now();
+  remainingTime = tempoAnimacao * 1000;
+  timerHandle = setTimeout(() => {
     togglePauseAnimation();
     window.alert(`Fim da animação, números sorteados:\n ${result}`);
-  }, tempoAnimacao * 1000);
+  }, remainingTime);
 
   actions.forEach((action) => {
     if (action._clip.name.match(/^Globe\d+$/)) {
@@ -44,13 +46,25 @@ export function togglePauseAnimation() {
     action.paused = isPaused;
   });
 
+  if (isPaused) {
+    clearTimeout(timerHandle);
+    remainingTime -= Date.now() - startTime;
+  } else {
+    startTime = Date.now();
+    timerHandle = setTimeout(() => {
+      const result = generateResult(); // Reuse the same function to generate result
+      togglePauseAnimation(true);
+      window.alert(`Fim da animação, números sorteados:\n${result}`);
+    }, remainingTime);
+  }
+
   document.getElementById("stateButton").innerText = isPaused
     ? "Resumir"
     : "Pausar";
 }
 
 export function toggleStateAnimation() {
-  if (document.getElementById("stateButton").innerText != "INICIAR") {
+  if (document.getElementById("stateButton").innerText !== "INICIAR") {
     togglePauseAnimation();
   } else {
     startAnimation();
