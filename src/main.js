@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 const predefinedOrder =
-  (await JSON.parse(localStorage.getItem("GloboSorteioOrdem"))) ||
+  JSON.parse(localStorage.getItem("GloboSorteioOrdem")) ||
   Array.from({ length: 10 }, () => []);
 
 let currentRound = 0;
