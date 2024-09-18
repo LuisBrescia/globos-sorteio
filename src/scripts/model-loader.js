@@ -48,15 +48,15 @@ export async function loadModel(sorteioOrder) {
           const globoIndex = parseInt(ballNumber[0], 10) - 1;
           const ballIndex = parseInt(ballNumber[1], 10);
 
-          let position = 0;
+          let orderSize = 0;
           for (let i = 0; i < sorteioOrder.length; i++) {
-            if (sorteioOrder[i].length === 0) {
-              position = i;
+            if (sorteioOrder[i].length === 0 || sorteioOrder[i][0] == null) {
+              orderSize = i;
               break;
             }
           }
 
-          if (ballIndex >= position) {
+          if (ballIndex >= orderSize) {
             node.visible = false;
           } else {
             const textureNumber = sorteioOrder[ballIndex][globoIndex];
@@ -75,9 +75,6 @@ export async function loadModel(sorteioOrder) {
         } else if (node.isMesh) {
           node.material.metalness = 1;
           node.material.roughness = 0.25;
-          console.log("MESH", node.name);
-        } else {
-          console.log("NOT MESH:", node.name);
         }
       });
 

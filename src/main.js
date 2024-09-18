@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const { loadModel } = await import("./scripts/model-loader.js");
 
   initScene();
-  animate();
+  animate(predefinedOrder);
   loadModel(predefinedOrder);
 });
 
@@ -52,7 +52,6 @@ function selectNumber(globoId, number) {
   }
 
   updateButtons();
-  console.log("Predefined Order:", predefinedOrder);
 }
 function updateButtons() {
   document
