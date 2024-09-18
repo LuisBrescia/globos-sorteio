@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 const predefinedOrder =
   JSON.parse(localStorage.getItem("GloboSorteioOrdem")) ||
   Array.from({ length: 10 }, () => []);
-
 let currentRound = 0;
 
 function createNumberButtons(globoId) {
@@ -123,7 +122,10 @@ document.addEventListener("click", bodyCloseMenu);
 document.getElementById("closeModal").addEventListener("click", closeModal);
 
 document.getElementById("saveOrder").addEventListener("click", () => {
-  localStorage.setItem("GloboSorteioOrdem", JSON.stringify(predefinedOrder));
+  const cleanedOrder = predefinedOrder.map((subArray) =>
+    subArray.every((item) => item === null) ? [] : subArray
+  );
+  localStorage.setItem("GloboSorteioOrdem", JSON.stringify(cleanedOrder));
   window.location.reload();
   document.getElementById("modal").classList.remove("active");
 });

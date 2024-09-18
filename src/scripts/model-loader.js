@@ -50,7 +50,7 @@ export async function loadModel(sorteioOrder) {
 
           let orderSize = 0;
           for (let i = 0; i < sorteioOrder.length; i++) {
-            if (sorteioOrder[i].length === 0 || sorteioOrder[i][0] == null) {
+            if (sorteioOrder[i].length === 0) {
               orderSize = i;
               break;
             }

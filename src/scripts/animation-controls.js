@@ -9,17 +9,28 @@ export async function startAnimation() {
 
   let orderSize = 0;
   for (let i = 0; i <= sorteioOrder.length; i++) {
-    if (sorteioOrder[i].length === 0 || sorteioOrder[i][0] == null) {
+    if (sorteioOrder[i].length === 0) {
       orderSize = i;
       break;
     }
   }
 
+  let result = "";
+  for (let i = 0; i < orderSize; i++) {
+    result += sorteioOrder[i].join("");
+    result += i < orderSize - 1 ? ", " : "";
+  }
+
+  const tempoAnimacao = 27 * orderSize;
+  setTimeout(() => {
+    togglePauseAnimation();
+    window.alert(`Fim da animação, números sorteados:\n ${result}`);
+  }, tempoAnimacao * 1000);
+
   actions.forEach((action) => {
     if (action._clip.name.match(/^Globe\d+$/)) {
-      console.log(action);
       action._clip.tracks = [action._clip.tracks[0]];
-      action._clip.duration = 26 * orderSize;
+      action._clip.duration = tempoAnimacao;
     }
     action.reset().play();
   });
